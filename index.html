@@ -28,6 +28,13 @@ body {
 .upptagen {
   border-color: #dc2626;
 }
+.gul {
+  border-color: #eab308;
+}
+
+.bla {
+  border-color: #2563eb;
+}
 
 .center {
   text-align: center;
@@ -76,56 +83,76 @@ body {
 <script>
 let currentStatus = "";
 
-// Uppdatera status (utan blink)
+// Auto font-size baserat på textlängd
+function autoSizeText(text) {
+  let el = document.getElementById("statusText");
+  let length = text.length;
+
+  if (length <= 6) {
+    el.style.fontSize = "140px";
+  } else if (length <= 12) {
+    el.style.fontSize = "100px";
+  } else if (length <= 20) {
+    el.style.fontSize = "70px";
+  } else {
+    el.style.fontSize = "50px";
+  }
+}
+
+// Uppdatera status
 function updateStatus() {
   fetch('status.txt?' + new Date().getTime())
     .then(res => res.text())
     .then(data => {
       let raw = data.trim();
 
-      // Uppdatera bara om ändrat
       if (raw !== currentStatus) {
         currentStatus = raw;
 
-        // Första tecken = statuskod
         let mode = raw.charAt(0);
         let text = raw.substring(1).trim();
 
-        // Fallback om ingen text finns
         if (!text) text = "...";
 
+        // Färger
         if (mode === "1") {
           document.body.className = "ledig";
         } else if (mode === "2") {
           document.body.className = "upptagen";
+        } else if (mode === "3") {
+          document.body.className = "gul";
+        } else if (mode === "4") {
+          document.body.className = "bla";
         }
 
+        // Text + emojis funkar direkt
         document.getElementById("statusText").innerText = text;
+
+        // Auto-size
+        autoSizeText(text);
       }
     });
 }
 
-// Klocka (separat, påverkar inte layout)
+// Klocka
 function updateClock() {
   let now = new Date();
   let time = now.toLocaleTimeString('sv-SE', { 
     hour: '2-digit', 
     minute: '2-digit'
-     
-  });
+  }).replace(":", " : ");
+
   document.getElementById("clock").innerText = time;
 }
 
-// Kör loopar
+// Loopar
 setInterval(updateStatus, 2000);
 setInterval(updateClock, 1000);
 
-// Start direkt
+// Start
 updateStatus();
 updateClock();
 </script>
-
-
 
 
 </body>
