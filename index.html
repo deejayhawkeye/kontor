@@ -2,7 +2,6 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="2">
 
 <style>
 body {
@@ -66,38 +65,52 @@ body {
 </div>
 
 <script>
-// Uppdatera status
+let currentStatus = "";
+
+// Uppdatera status (utan blink)
 function updateStatus() {
   fetch('status.txt?' + new Date().getTime())
     .then(res => res.text())
     .then(data => {
       let status = data.trim();
 
-      if (status === "ledig") {
-        document.body.className = "ledig";
-        document.getElementById("statusText").innerText = "LEDIG";
-      } else {
-        document.body.className = "upptagen";
-        document.getElementById("statusText").innerText = "UPPTAGEN";
+      // Uppdatera bara om det ändrats
+      if (status !== currentStatus) {
+        currentStatus = status;
+
+        if (status === "ledig") {
+          document.body.className = "ledig";
+          document.getElementById("statusText").innerText = "LEDIG";
+        } else {
+          document.body.className = "upptagen";
+          document.getElementById("statusText").innerText = "UPPTAGEN";
+        }
       }
     });
 }
 
-// Klocka
+// Klocka (separat, påverkar inte layout)
 function updateClock() {
   let now = new Date();
-  let time = now.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  let time = now.toLocaleTimeString('sv-SE', { 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit' 
+  });
   document.getElementById("clock").innerText = time;
 }
 
-// Loopar
+// Kör loopar
 setInterval(updateStatus, 2000);
 setInterval(updateClock, 1000);
 
-// Start
+// Start direkt
 updateStatus();
 updateClock();
 </script>
+
+
+
 
 </body>
 </html>
