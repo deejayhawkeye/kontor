@@ -38,8 +38,12 @@ body {
 }
 
 .clock {
-  font-size: 40px;
-  margin-top: 20px;
+  text-align: center;
+  font-size: 110px;
+  font-weight: 200;
+  letter-spacing: 4px;
+  margin-top: 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", Arial, sans-serif;
 }
 
 .logo {
@@ -55,13 +59,15 @@ body {
 
 <body id="body">
 
+<div class="clock" id="clock"></div>
+
 <div class="center">
   <div class="status" id="statusText">...</div>
-  <div class="clock" id="clock"></div>
 </div>
 
+
 <div class="logo">
-  <img src="logo.jpg">
+  <img src="logo.png">
 </div>
 
 <script>
@@ -72,19 +78,26 @@ function updateStatus() {
   fetch('status.txt?' + new Date().getTime())
     .then(res => res.text())
     .then(data => {
-      let status = data.trim();
+      let raw = data.trim();
 
-      // Uppdatera bara om det ändrats
-      if (status !== currentStatus) {
-        currentStatus = status;
+      // Uppdatera bara om ändrat
+      if (raw !== currentStatus) {
+        currentStatus = raw;
 
-        if (status === "ledig") {
+        // Första tecken = statuskod
+        let mode = raw.charAt(0);
+        let text = raw.substring(1).trim();
+
+        // Fallback om ingen text finns
+        if (!text) text = "...";
+
+        if (mode === "1") {
           document.body.className = "ledig";
-          document.getElementById("statusText").innerText = "LEDIG";
-        } else {
+        } else if (mode === "2") {
           document.body.className = "upptagen";
-          document.getElementById("statusText").innerText = "UPPTAGEN";
         }
+
+        document.getElementById("statusText").innerText = text;
       }
     });
 }
@@ -94,8 +107,8 @@ function updateClock() {
   let now = new Date();
   let time = now.toLocaleTimeString('sv-SE', { 
     hour: '2-digit', 
-    minute: '2-digit', 
-    second: '2-digit' 
+    minute: '2-digit'
+     
   });
   document.getElementById("clock").innerText = time;
 }
