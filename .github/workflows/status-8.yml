@@ -1,17 +1,23 @@
-name: Sätt Status 8
+name: Egen text
 on:
   workflow_dispatch:
+    inputs:
+      min_text:
+        description: 'Egen statustext'
+        required: true
+
 permissions:
   contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
-          echo "Status 4" > status.txt
+          echo "${{ inputs.min_text }}" > status.txt
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add status.txt
-          git commit -m "Uppdatera status.txt"
+          git commit -m "Uppdatera status.txt" || exit 0
           git push
