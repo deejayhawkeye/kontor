@@ -1,4 +1,4 @@
-name: Sätt Status 3
+name: Tillfälligt ute
 on:
   workflow_dispatch:
 permissions:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          echo "Ute Tillfälligt" > status.txt
+          echo "2 Tillfälligt Ute" > status.txt
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add status.txt
