@@ -1,4 +1,4 @@
-name: Sätt Status 6
+name: Service
 on:
   workflow_dispatch:
 permissions:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          echo "Status 4" > status.txt
+          echo "2Service" > status.txt
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add status.txt
